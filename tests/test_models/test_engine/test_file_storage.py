@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+U#!/usr/bin/python3
 """
 Contains the TestFileStorageDocs classes
 """
@@ -113,3 +113,14 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_get(self):
+        """Test that function gets objects"""
+        store = FileStorage()
+        first_id = storage.all(State).values()[0].id
+        obj = store.get(State, first_id)
+        self.assertEqual(obj.__class__.__name__, State)
+        second_id = ''
+        obj2 = store.get(State, second_id)
+        self.assertEqual(obj2, None)
