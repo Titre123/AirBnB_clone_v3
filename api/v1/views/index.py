@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 from models import storage
 from api.v1.views import app_views
-from flask import jsonify, make_response, request
+from flask import jsonify, request
 
 @app_views.route('/status', methods=['GET'])
 def status():
     """ Return json status """
     if request.method == "GET":
-        return make_response(jsonify({"status": "Ok"}), 200)
+        return jsonify({"status": "Ok"})
 
 @app_views.route('/stats')
 def stats():
