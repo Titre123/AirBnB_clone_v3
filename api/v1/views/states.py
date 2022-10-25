@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request, make_response, abort
 from models import storage
 from models.state import State
 from datetime import datetime
@@ -16,20 +16,18 @@ def states():
 @app_views.route('/states/<state_id>', methods=['GET'])
 def stateId(state_id):
     """ Retrieves the list of all State objects """
-    x = storage.all("State")
+    x = storage.get("State", state_id)
     new_dict = {}
-    for key, value in x.items():
-        if key == state_id:
-            new_dict = value.to_dict()
-            break
-        else:
-            abort(404)
+    if x is None:
+        abort(404)
+    else:
+        new_dict = x.to_dict()
     return jsonify(new_dict)
 
 @app_views.route('/states/<state_id>', methods=['DELETE'])
 def deleteStateId(state_id):
     """ Retrieves the list of all State objects """
-    if request.methods = 'DELETE':
+    if request.methods == 'DELETE':
         x = storage.get("State", state_id)
         if x is None:
             abort(404)
@@ -41,7 +39,7 @@ def deleteStateId(state_id):
 @app_views.route('/states/', methods=['POST'])
 def postState():
     """ Post new_state """
-    if request.methods = "POST":
+    if request.methods == "POST":
         x = request.get_json()
         if not x:
             abort(400, 'Not a JSON')
@@ -51,10 +49,10 @@ def postState():
         obj.save()
         return jsonify(obj.to_json()), 201
 
-@app_views.route('/states/<state_id>', methods=['POST']
+@app_views.route('/states/<state_id>', methods=['POST'])
 def update(state_id):
     """ update """
-    if request.methods = "PUT":
+    if request.methods == "PUT":
         y = storage.get("State", state_id).to_dict()
         x = request.get_json()
         if not x:
