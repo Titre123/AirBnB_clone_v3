@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+""" State objects API actiions """
 from flask import Flask, jsonify, request, make_response, abort
 from models import storage
 from models.state import State
@@ -27,38 +29,38 @@ def stateId(state_id):
 @app_views.route('/states/<state_id>', methods=['DELETE'])
 def deleteStateId(state_id):
     """ Retrieves the list of all State objects """
-    if request.methods == 'DELETE':
-        x = storage.get("State", state_id)
-        if x is None:
+    if request.method == 'DELETE':
+        xo = storage.get("State", state_id)
+        if xo is None:
             abort(404)
-        else:
-            storage.delete(x)
-            del x
-            return jsonify({})
+        xo.delete()
+        storage.save()
+        return jsonify({}), 200
 
 @app_views.route('/states/', methods=['POST'])
 def postState():
     """ Post new_state """
-    if request.methods == "POST":
+    if request.method == "POST":
         x = request.get_json()
         if not x:
             abort(400, 'Not a JSON')
         if not 'name' in x:
             abort(400, 'Missing Name')
         obj = State(**x)
-        obj.save()
-        return jsonify(obj.to_json()), 201
+        storage.new(obj)
+        storage.save()
+        return jsonify(obj.to_dict()), 201
 
-@app_views.route('/states/<state_id>', methods=['POST'])
+@app_views.route('/states/<state_id>', methods=['PUT'])
 def update(state_id):
     """ update """
-    if request.methods == "PUT":
-        y = storage.get("State", state_id).to_dict()
+    if request.method == "PUT":
+        state = storage.get("State", state_id)
         x = request.get_json()
         if not x:
             abort(400, 'Not a JSON')
-        for key, value in x:
+        for key, value in x.items():
             if key == "name":
-                y[key] = value
-                y["updated_at"] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
-        return jsonify(y), 200
+                setattr(state, key, value)
+        storage.save()
+        return jsonify(y.to_dict()), 200

@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+"""
+App module for init
+"""
 from flask import Flask, make_response, jsonify
 from models import storage
 import os
