@@ -68,4 +68,4 @@ def update(state_id):
             if key == "name":
                 setattr(state, key, value)
         storage.save()
-        return jsonify(y.to_dict()), 200
+        return jsonify(state.to_dict()), 200
