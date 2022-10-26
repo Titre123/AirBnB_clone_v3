@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-index file
+index file for the view. server all views
 """
 from models import storage
 from api.v1.views import app_views
