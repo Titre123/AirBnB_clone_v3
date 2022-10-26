@@ -11,7 +11,7 @@ from flask import jsonify, request
 def status():
     """ Return json status """
     if request.method == "GET":
-        return jsonify({"status": "Ok"})
+        return jsonify({"status": "OK"})
 
 
 @app_views.route('/stats')
