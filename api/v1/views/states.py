@@ -6,6 +6,7 @@ from models.state import State
 from datetime import datetime
 from api.v1.views import app_views
 
+
 @app_views.route('/states/', methods=['GET'])
 def states():
     """ Retrieves the list of all State objects """
@@ -14,6 +15,7 @@ def states():
     for key, value in x.items():
         new_dict.append(value.to_dict())
     return jsonify(new_dict)
+
 
 @app_views.route('/states/<state_id>', methods=['GET'])
 def stateId(state_id):
@@ -26,6 +28,7 @@ def stateId(state_id):
         new_dict = x.to_dict()
     return jsonify(new_dict)
 
+
 @app_views.route('/states/<state_id>', methods=['DELETE'])
 def deleteStateId(state_id):
     """ Retrieves the list of all State objects """
@@ -37,6 +40,7 @@ def deleteStateId(state_id):
         storage.save()
         return jsonify({}), 200
 
+
 @app_views.route('/states/', methods=['POST'])
 def postState():
     """ Post new_state """
@@ -44,12 +48,13 @@ def postState():
         x = request.get_json()
         if not x:
             abort(400, 'Not a JSON')
-        if not 'name' in x:
+        if 'name' not in x:
             abort(400, 'Missing Name')
         obj = State(**x)
         storage.new(obj)
         storage.save()
         return jsonify(obj.to_dict()), 201
+
 
 @app_views.route('/states/<state_id>', methods=['PUT'])
 def update(state_id):
