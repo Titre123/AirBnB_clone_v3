@@ -2,7 +2,7 @@
 """ State objects API actiions """
 from flask import Flask, jsonify, request, make_response, abort
 from models import storage
-from models.state import Amenities
+from models.amenity import Amenities
 from datetime import datetime
 from api.v1.views import app_views
 
