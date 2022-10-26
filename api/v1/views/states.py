@@ -7,7 +7,7 @@ from datetime import datetime
 from api.v1.views import app_views
 
 
-@app_views.route('/states/', methods=['GET'])
+@app_views.route('/states', methods=['GET'])
 def states():
     """ Retrieves the list of all State objects """
     x = storage.all("State")
