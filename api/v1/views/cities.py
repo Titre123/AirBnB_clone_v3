@@ -32,4 +32,47 @@ def idcity(city_id):
     return jsonify(new_dict)
 
 
+@app_views.route('/cities/<city_id>', methods=['DELETE'])
+def deleteStateId(city_id):
+    """ Retrieves the list of all State objects """
+    if request.method == 'DELETE':
+        xo = storage.get("City", city_id)
+        if xo is None:
+            abort(404)
+        xo.delete()
+        storage.save()
+        return jsonify({}), 200
 
+
+@app_views.route('/states/<state_id>/cities', methods=['POST'])
+def postState(state_id):
+    """ Post new_state """
+    if request.method == "POST":
+        y = storage.get("State", state_id)
+        x = request.get_json()
+        if y == None:
+            abort(404)
+        if not x:
+            abort(400, 'Not a JSON')
+        if 'name' not in x:
+            abort(400, 'Missing Name')
+        x['state_id'] = state_id
+        obj = City(**x)
+        storage.new(obj)
+        storage.save()
+        return jsonify(obj.to_dict()), 201
+
+
+@app_views.route('/cities/<city_id>', methods=['PUT'])
+def update(city_id):
+    """ update """
+    if request.method == "PUT":
+        state = storage.get("City", city_id)
+        x = request.get_json()
+        if not x:
+            abort(400, 'Not a JSON')
+        for key, value in x.items():
+            if key == "name":
+                setattr(state, key, value)
+        storage.save()
+        return jsonify(state.to_dict()), 200
